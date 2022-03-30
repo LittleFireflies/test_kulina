@@ -195,8 +195,13 @@ class HomeHeaderView extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
+              Icon(
+                Icons.arrow_drop_down_sharp,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ],
           ),
+          const SizedBox(height: 16),
           // TODO: Fix color/style
           TextField(
             decoration: InputDecoration(
