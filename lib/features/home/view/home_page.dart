@@ -25,29 +25,99 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          if (state is HomeLoadedState) {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                final banner = state.banners[index];
+      appBar: AppBar(
+        title: Text('FOOD.ID'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.chat),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          const HomeHeaderView(),
+          BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoadedState) {
+                return SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final banner = state.banners[index];
 
-                return ListTile(
-                  title: Text(banner.media),
+                      return Card(
+                        child: Image.network(banner.media),
+                      );
+                    },
+                    itemCount: state.banners.length,
+                    scrollDirection: Axis.horizontal,
+                  ),
                 );
-              },
-              itemCount: state.banners.length,
-            );
-          } else if (state is HomeLoadErrorState) {
-            return Center(
-              child: Text(state.message),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+              } else if (state is HomeLoadErrorState) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeHeaderView extends StatelessWidget {
+  const HomeHeaderView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.primary,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.location_on_outlined,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              Text(
+                'Dikirim ke',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Jakarta Selatan',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ],
+          ),
+          // TODO: Fix color/style
+          TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Mau belanja makanan apa?',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40.0),
+              ),
+              // fillColor: Colors.red,
+              // focusColor: Theme.of(context).colorScheme.onPrimary,
+              // iconColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }
