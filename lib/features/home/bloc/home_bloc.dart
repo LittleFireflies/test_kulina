@@ -8,5 +8,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc(AppRepository repository)
       : _repository = repository,
-        super(const HomeLoadingState());
+        super(const HomeLoadingState()) {
+    on<LoadHomeBanners>((event, emit) async {
+      emit(const HomeLoadingState());
+
+      final banners = await _repository.loadBanners();
+      emit(HomeLoadedState(banners));
+    });
+  }
 }
