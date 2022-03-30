@@ -47,5 +47,25 @@ void main() {
         verify(() => repository.loadBanners()).called(1);
       },
     );
+
+    final exception = Exception('Error!');
+
+    blocTest<HomeBloc, HomeState>(
+      'emits HomeLoadedState '
+      'when LoadHomeBanners is added '
+      'and exception is thrown',
+      setUp: () {
+        when(() => repository.loadBanners()).thenThrow(exception);
+      },
+      build: () => bloc,
+      act: (bloc) => bloc.add(const LoadHomeBanners()),
+      expect: () => [
+        const HomeLoadingState(),
+        HomeLoadErrorState(exception.toString()),
+      ],
+      verify: (_) {
+        verify(() => repository.loadBanners()).called(1);
+      },
+    );
   });
 }

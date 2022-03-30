@@ -12,8 +12,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadHomeBanners>((event, emit) async {
       emit(const HomeLoadingState());
 
-      final banners = await _repository.loadBanners();
-      emit(HomeLoadedState(banners));
+      try {
+        final banners = await _repository.loadBanners();
+        emit(HomeLoadedState(banners));
+      } catch (e) {
+        emit(HomeLoadErrorState(e.toString()));
+      }
     });
   }
 }
