@@ -30,52 +30,136 @@ class HomeView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.chat),
+            icon: const Icon(Icons.chat),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const HomeHeaderView(),
-          BlocBuilder<HomeBloc, HomeState>(
-            builder: (context, state) {
-              if (state is HomeLoadedState) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SizedBox(
-                    height: 140,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        final banner = state.topBanners[index];
+      body: const CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: HomeHeaderView(),
+          ),
+          _TopBannersView(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Special di FOOD.ID',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          _SmallBannersView(),
+        ],
+      ),
+    );
+  }
+}
 
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Card(
-                            child: Image.network(
-                              banner.media,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: state.topBanners.length,
-                      scrollDirection: Axis.horizontal,
+class _SmallBannersView extends StatelessWidget {
+  const _SmallBannersView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if (state is HomeLoadedState) {
+          return SliverPadding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 2 / 1,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final banner = state.smallBanners[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.network(
+                      banner.media,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                );
-              } else if (state is HomeLoadErrorState) {
-                return Center(
-                  child: Text(state.message),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-        ],
-      ),
+                  );
+                },
+                childCount: state.smallBanners.length,
+              ),
+            ),
+          );
+        } else if (state is HomeLoadErrorState) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(state.message),
+            ),
+          );
+        } else {
+          return const SliverToBoxAdapter(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
+class _TopBannersView extends StatelessWidget {
+  const _TopBannersView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if (state is HomeLoadedState) {
+          return SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: SliverToBoxAdapter(
+              child: SizedBox(
+                height: 140,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    final banner = state.topBanners[index];
+
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Card(
+                        child: Image.network(
+                          banner.media,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: state.topBanners.length,
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+            ),
+          );
+        } else if (state is HomeLoadErrorState) {
+          return SliverToBoxAdapter(
+            child: Center(
+              child: Text(state.message),
+            ),
+          );
+        } else {
+          return SliverToBoxAdapter(
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
     );
   }
 }
