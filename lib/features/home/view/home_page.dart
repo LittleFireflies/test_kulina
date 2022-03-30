@@ -40,18 +40,27 @@ class HomeView extends StatelessWidget {
           BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
               if (state is HomeLoadedState) {
-                return SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final banner = state.banners[index];
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    height: 140,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final banner = state.topBanners[index];
 
-                      return Card(
-                        child: Image.network(banner.media),
-                      );
-                    },
-                    itemCount: state.banners.length,
-                    scrollDirection: Axis.horizontal,
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            child: Image.network(
+                              banner.media,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: state.topBanners.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   ),
                 );
               } else if (state is HomeLoadErrorState) {

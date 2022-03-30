@@ -14,7 +14,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         final banners = await _repository.loadBanners();
-        emit(HomeLoadedState(banners));
+
+        final topBanners =
+            banners.where((element) => element.variant.slug == 'top').toList();
+        final smallBanners = banners
+            .where((element) => element.variant.slug == 'small')
+            .toList();
+        emit(HomeLoadedState(
+          smallBanners: smallBanners,
+          topBanners: topBanners,
+        ));
       } catch (e) {
         emit(HomeLoadErrorState(e.toString()));
       }

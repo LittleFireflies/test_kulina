@@ -13,12 +13,19 @@ class HomeLoadingState extends HomeState {
 }
 
 class HomeLoadedState extends HomeState {
-  final List<Banner> banners;
+  final List<Banner> smallBanners;
+  final List<Banner> topBanners;
 
-  const HomeLoadedState(this.banners);
+  const HomeLoadedState({
+    required this.smallBanners,
+    required this.topBanners,
+  });
 
   @override
-  List<Object?> get props => [banners];
+  List<Object?> get props => [
+        smallBanners,
+        topBanners,
+      ];
 }
 
 class HomeLoadErrorState extends HomeState {

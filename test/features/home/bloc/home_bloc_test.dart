@@ -15,7 +15,10 @@ void main() {
     late AppRepository repository;
     late HomeBloc bloc;
 
-    final banners = [TestModels.banner];
+    final banners = [
+      TestModels.smallBanner,
+      TestModels.topBanner,
+    ];
 
     setUp(() {
       repository = MockRepository();
@@ -41,7 +44,10 @@ void main() {
       act: (bloc) => bloc.add(const LoadHomeBanners()),
       expect: () => [
         const HomeLoadingState(),
-        HomeLoadedState(banners),
+        HomeLoadedState(
+          topBanners: [TestModels.topBanner],
+          smallBanners: [TestModels.smallBanner],
+        ),
       ],
       verify: (_) {
         verify(() => repository.loadBanners()).called(1);

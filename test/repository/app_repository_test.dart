@@ -12,7 +12,7 @@ void main() {
     late ApiService apiService;
     late AppRepository repository;
 
-    final banners = [TestModels.banner];
+    final banners = [TestModels.smallBanner];
 
     setUp(() {
       apiService = MockApiService();
